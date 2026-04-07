@@ -38,7 +38,8 @@ dependencies = [
     "psutil",
     "vizdoom",
     "pettingzoo",
-    "xai_sdk"
+    "xai_sdk",
+    "minigrid"
 ]
 license = {text = "MIT"}
 repository = "https://github.com/lmgame-org/GamingAgent"
