@@ -27,6 +27,7 @@ from gamingagent.envs.custom_03_candy_crush.candyCrushEnv import CandyCrushEnv
 from gamingagent.envs.custom_04_tetris.tetrisEnv import TetrisEnv
 from gamingagent.envs.custom_05_doom.doomEnv import DoomEnvWrapper
 from gamingagent.envs.custom_06_pokemon_red.pokemonRedEnv import PokemonRedEnv
+from gamingagent.envs.custom_07_minigrid.miniGridEnv import MiniGridEnv
 
 from gamingagent.envs.retro_01_super_mario_bros.superMarioBrosEnv import SuperMarioBrosEnv
 from gamingagent.envs.retro_02_ace_attorney.aceAttorneyEnv import AceAttorneyEnv
@@ -41,6 +42,7 @@ game_config_mapping = {
     "tetris": "custom_04_tetris",
     "doom": "custom_05_doom",
     "pokemon_red": "custom_06_pokemon_red",
+    "minigrid": "custom_07_minigrid",
     "super_mario_bros":"retro_01_super_mario_bros",
     "ace_attorney":"retro_02_ace_attorney",
     "nineteen_forty_two": "retro_03_1942",
@@ -297,6 +299,29 @@ def create_environment(game_name_arg: str,
             game_specific_config_path_for_adapter=env_specific_config_path,
             max_stuck_steps_for_adapter=env_init_params.get('max_stuck_steps_for_adapter'),
             harness=harness
+        )
+        return env
+    elif game_name_arg == "minigrid":
+        # Load params specific to MiniGrid
+        with open(env_specific_config_path, 'r') as f:
+            env_specific_config = json.load(f)
+            env_init_kwargs = env_specific_config.get('env_init_kwargs', {})
+            env_init_params['env_name'] = env_init_kwargs.get('env_name', 'MiniGrid-Empty-8x8-v0')
+            env_init_params['max_steps'] = env_init_kwargs.get('max_steps', 100)
+            env_init_params['render_mode'] = env_specific_config.get('render_mode_gym_make', 'rgb_array')
+            env_init_params['max_stuck_steps_for_adapter'] = env_specific_config.get('max_unchanged_steps_for_termination', 15)
+
+        print(f"Initializing environment: {game_name_arg} with params: {env_init_params}")
+        env = MiniGridEnv(
+            render_mode=env_init_params.get('render_mode'),
+            env_name=env_init_params.get('env_name'),
+            max_steps=env_init_params.get('max_steps'),
+            # Adapter related params
+            game_name_for_adapter=game_name_arg,
+            observation_mode_for_adapter=obs_mode_arg,
+            agent_cache_dir_for_adapter=cache_dir_for_adapter,
+            game_specific_config_path_for_adapter=env_specific_config_path,
+            max_stuck_steps_for_adapter=env_init_params.get('max_stuck_steps_for_adapter')
         )
         return env
     elif game_name_arg == "super_mario_bros":

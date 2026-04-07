@@ -109,6 +109,7 @@ Currently our evaluation suite composes of the following games using gym envrion
 - 2048
 - Candy Crush
 - Pokemon Red
+- MiniGrid
 
 Most games are runnable out-of-the-box with no additional setup. For Pokemon Red, you need to place the ROM file in the designated directory:
 
@@ -182,6 +183,7 @@ Currently supported games:
 - tetris
 - candy_crush
 - twenty_forty_eight
+- minigrid
 - super_mario_bros
 - ace_attorney
 ```
